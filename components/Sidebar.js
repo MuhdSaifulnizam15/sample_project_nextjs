@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FileOutlined, PieChartOutlined, UserOutlined, DesktopOutlined } from '@ant-design/icons';
+import { PieChartOutlined, UserOutlined, DesktopOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import Image from "next/image";
 import styles from '../styles/Sidebar.module.css'

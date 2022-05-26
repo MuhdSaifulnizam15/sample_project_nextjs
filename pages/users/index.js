@@ -1,7 +1,7 @@
 import { Breadcrumb, Layout, Table } from "antd";
 import Head from "next/head";
-import FooterAdmin from "../components/FooterAdmin";
-import Sidebar from "../components/Sidebar";
+import FooterAdmin from "../../components/FooterAdmin";
+import Sidebar from "../../components/Sidebar";
 
 const { Header, Content } = Layout;
 
@@ -72,7 +72,7 @@ const User = ({ users }) => {
               margin: "16px 0",
             }}
           >
-            <Breadcrumb.Item>User</Breadcrumb.Item>
+            <Breadcrumb.Item>Users</Breadcrumb.Item>
             <Breadcrumb.Item>List of User</Breadcrumb.Item>
           </Breadcrumb>
           <div
@@ -104,7 +104,7 @@ export async function getStaticProps() {
   // Call an external API endpoint to get posts
   const res = await fetch("https://jsonplaceholder.typicode.com/users");
   const users = await res.json();
-  console.log("users", users);
+  // console.log("users", users);
 
   // By returning { props: { users } }, the User component
   // will receive `users` as a prop at build time
