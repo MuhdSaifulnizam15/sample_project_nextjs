@@ -1,4 +1,4 @@
-import { Breadcrumb, Layout } from "antd";
+import { Breadcrumb, Card, Col, Layout, Row } from "antd";
 import Head from "next/head";
 import FooterAdmin from "../components/FooterAdmin";
 import Sidebar from "../components/Sidebar";
@@ -45,7 +45,36 @@ const Dashboard = () => {
                 minHeight: 360,
               }}
             >
-              <h1>Dashboard</h1>
+              <Row gutter={[16, 16]}>
+                <Col span={6}>
+                  <Card
+                    title="Posts"
+                  >
+                    <p>100</p>
+                  </Card>
+                </Col>
+                <Col span={6}>
+                  <Card
+                    title="Users"
+                  >
+                    <p>10</p>
+                  </Card>
+                </Col>
+                <Col span={6}>
+                  <Card
+                    title="Todos"
+                  >
+                    <p>200</p>
+                  </Card>
+                </Col>
+                <Col span={6}>
+                  <Card
+                    title="Albums"
+                  >
+                    <p>100</p>
+                  </Card>
+                </Col>
+              </Row>
             </div>
           </Content>
           <FooterAdmin />
