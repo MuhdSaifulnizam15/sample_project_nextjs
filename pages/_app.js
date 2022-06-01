@@ -1,8 +1,15 @@
-import '../styles/globals.css'
-import 'antd/dist/antd.css';
+import { QueryClient, QueryClientProvider } from "react-query";
+import "../styles/globals.css";
+import "antd/dist/antd.css";
+
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Component {...pageProps} />
+    </QueryClientProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;
