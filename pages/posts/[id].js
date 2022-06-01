@@ -1,5 +1,7 @@
 import { Breadcrumb, Layout, Table } from "antd";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import FooterAdmin from "../../components/FooterAdmin";
 import Sidebar from "../../components/Sidebar";
 
@@ -23,7 +25,24 @@ const columns = [
   },
 ];
 
-const Posts = ({ comments }) => {
+const Posts = () => {
+  const router = useRouter();
+  
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (router.query.id) {
+      _getData(router.query.id);
+    }
+  }, [router.query.id]);
+
+  const _getData = async (cid) => {
+    const res = await fetch(`/api/posts/${cid}`);
+    const list = await res.json();
+    console.log('list', list);
+    list.length > 0 ? setData(list) : setData([]);
+  };
+  
   return (
     <>
       <Head>
@@ -65,7 +84,7 @@ const Posts = ({ comments }) => {
               }}
             >
               <Table
-                dataSource={comments}
+                dataSource={data}
                 columns={columns}
                 scroll={{ x: "100%", y: 500 }}
                 pagination={{
@@ -81,41 +100,41 @@ const Posts = ({ comments }) => {
   );
 };
 
-export async function getStaticPaths() {
-  // Return a list of possible value for id
-  // Call an external API endpoint to get posts
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-  const posts = await res.json();
+// export async function getStaticPaths() {
+//   // Return a list of possible value for id
+//   // Call an external API endpoint to get posts
+//   const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+//   const posts = await res.json();
 
-  // Get the paths we want to pre-render based on posts
-  const paths = posts.map((post) => ({
-    params: { id: post.id.toString() },
-  }));
+//   // Get the paths we want to pre-render based on posts
+//   const paths = posts.map((post) => ({
+//     params: { id: post.id.toString() },
+//   }));
 
-  // We'll pre-render only these paths at build time.
-  // { fallback: false } means other routes should 404.
-  return { paths, fallback: true };
-}
+//   // We'll pre-render only these paths at build time.
+//   // { fallback: false } means other routes should 404.
+//   return { paths, fallback: true };
+// }
 
-export async function getStaticProps({ params }) {
-  console.log("params", params.id);
-  const res = await fetch(
-    `https://jsonplaceholder.typicode.com/posts/${params.id}/comments`
-  );
-  const comments = await res.json();
-  // console.log('comments', comments);
+// export async function getStaticProps({ params }) {
+//   console.log("params", params.id);
+//   const res = await fetch(
+//     `https://jsonplaceholder.typicode.com/posts/${params.id}/comments`
+//   );
+//   const comments = await res.json();
+//   // console.log('comments', comments);
 
-  if (!comments) {
-    return {
-      notFound: true,
-    };
-  }
+//   if (!comments) {
+//     return {
+//       notFound: true,
+//     };
+//   }
 
-  return {
-    props: {
-      comments,
-    },
-  };
-}
+//   return {
+//     props: {
+//       comments,
+//     },
+//   };
+// }
 
 export default Posts;

@@ -1,6 +1,7 @@
 import { Breadcrumb, Layout, Space, Table } from "antd";
 import Head from "next/head";
 import Link from "next/link";
+import { useQuery } from "react-query";
 import FooterAdmin from "../../components/FooterAdmin";
 import Sidebar from "../../components/Sidebar";
 
@@ -36,7 +37,16 @@ const columns = [
   },
 ];
 
-const Post = ({ posts }) => {
+const fetchPostListFromAPI = async () => {
+  const res = await fetch("/api/posts");
+  return res.json();
+};
+
+const Post = () => {
+  const { data, status } = useQuery("posts", fetchPostListFromAPI);
+  // console.log("data:", data);
+  // console.log("status", status);
+
   return (
     <>
       <Head>
@@ -78,7 +88,7 @@ const Post = ({ posts }) => {
               }}
             >
               <Table
-                dataSource={posts}
+                dataSource={data}
                 columns={columns}
                 scroll={{ x: "100%", y: 500 }}
                 pagination={{
@@ -94,20 +104,20 @@ const Post = ({ posts }) => {
   );
 };
 
-// This function gets called at build time
-export async function getStaticProps() {
-  // Call an external API endpoint to get posts
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-  const posts = await res.json();
-  // console.log("posts", posts);
+// // This function gets called at build time
+// export async function getStaticProps() {
+//   // Call an external API endpoint to get posts
+//   const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+//   const posts = await res.json();
+//   // console.log("posts", posts);
 
-  // By returning { props: { posts } }, the Post component
-  // will receive `posts` as a prop at build time
-  return {
-    props: {
-      posts,
-    },
-  };
-}
+//   // By returning { props: { posts } }, the Post component
+//   // will receive `posts` as a prop at build time
+//   return {
+//     props: {
+//       posts,
+//     },
+//   };
+// }
 
 export default Post;

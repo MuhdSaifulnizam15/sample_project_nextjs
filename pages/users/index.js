@@ -1,6 +1,7 @@
 import { Breadcrumb, Layout, Space, Table } from "antd";
 import Head from "next/head";
 import Link from "next/link";
+import { useQuery } from "react-query";
 import FooterAdmin from "../../components/FooterAdmin";
 import Sidebar from "../../components/Sidebar";
 
@@ -49,7 +50,7 @@ const columns = [
         <Link
           href={{
             pathname: "/users/[id]/[type]",
-            query: { id: record.id, type: 'posts' },
+            query: { id: record.id, type: "posts" },
           }}
         >
           <a>All Posts</a>
@@ -57,7 +58,7 @@ const columns = [
         <Link
           href={{
             pathname: "/users/[id]/albums",
-            query: { id: record.id, type: 'albums' },
+            query: { id: record.id, type: "albums" },
           }}
         >
           <a>All Albums</a>
@@ -65,7 +66,7 @@ const columns = [
         <Link
           href={{
             pathname: "/users/[id]/todos",
-            query: { id: record.id, type: 'todos' },
+            query: { id: record.id, type: "todos" },
           }}
         >
           <a>All Todos</a>
@@ -75,77 +76,86 @@ const columns = [
   },
 ];
 
-const User = ({ users }) => {
+const fetchUserListFromAPI = async () => {
+  const res = await fetch("/api/users");
+  return res.json();
+};
+
+const User = () => {
+  const { data, status } = useQuery("users", fetchUserListFromAPI);
+  // console.log("data:", data);
+  // console.log("status", status);
+
   return (
     <>
-    <Head>
-    <title>User</title>
-          <meta name="description" content="User" />
-    </Head>
-    <Layout
-      style={{
-        minHeight: "100vh",
-      }}
-    >
-      <Sidebar />
-      <Layout className="site-layout">
-        <Header
-          className="site-layout-background"
-          style={{
-            padding: 0,
-          }}
-        />
-        <Content
-          style={{
-            margin: "0 16px",
-          }}
-        >
-          <Breadcrumb
-            style={{
-              margin: "16px 0",
-            }}
-          >
-            <Breadcrumb.Item>Users</Breadcrumb.Item>
-            <Breadcrumb.Item>List of User</Breadcrumb.Item>
-          </Breadcrumb>
-          <div
+      <Head>
+        <title>User</title>
+        <meta name="description" content="User" />
+      </Head>
+      <Layout
+        style={{
+          minHeight: "100vh",
+        }}
+      >
+        <Sidebar />
+        <Layout className="site-layout">
+          <Header 
             className="site-layout-background"
             style={{
-              padding: 24,
-              minHeight: 360,
+              padding: 0,
+            }}
+          />
+          <Content
+            style={{
+              margin: "0 16px",
             }}
           >
-            <Table
-              dataSource={users}
-              columns={columns}
-              scroll={{ x: "100%", y: 500 }}
-              pagination={{
-                pageSize: 5,
+            <Breadcrumb
+              style={{
+                margin: "16px 0",
               }}
-            />
-          </div>
-        </Content>
-        <FooterAdmin />
+            >
+              <Breadcrumb.Item>Users</Breadcrumb.Item>
+              <Breadcrumb.Item>List of User</Breadcrumb.Item>
+            </Breadcrumb>
+            <div
+              className="site-layout-background"
+              style={{
+                padding: 24,
+                minHeight: 360,
+              }}
+            >
+              <Table
+                dataSource={data}
+                columns={columns}
+                scroll={{ x: "100%", y: 500 }}
+                pagination={{
+                  pageSize: 5,
+                }}
+              />
+            </div>
+          </Content>
+          <FooterAdmin />
+        </Layout>
       </Layout>
-    </Layout>
     </>
   );
 };
 
-// This function gets called at build time
-export async function getStaticProps() {
-  // Call an external API endpoint to get posts
-  const res = await fetch("https://jsonplaceholder.typicode.com/users");
-  const users = await res.json();
-  // console.log("users", users);
+// // This function gets called at build time
+// export async function getStaticProps() {
+//   // Call an external API endpoint to get posts
+//   const res = await fetch("https://jsonplaceholder.typicode.com/users");
+//   const users = await res.json();
+//   // console.log("users", users);
 
-  // By returning { props: { users } }, the User component
-  // will receive `users` as a prop at build time
-  return {
-    props: {
-      users,
-    },
-  };
-}
+//   // By returning { props: { users } }, the User component
+//   // will receive `users` as a prop at build time
+//   return {
+//     props: {
+//       users,
+//     },
+//   };
+// }
 
 export default User;
